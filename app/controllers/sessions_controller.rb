@@ -6,18 +6,19 @@ class SessionsController < ApplicationController
   layout "public"
 
   def new
+    @signup = Signup.new
   end
 
   def create
     if identity = Identity.find_by_email_address(email_address)
       redirect_to_session_magic_link identity.send_magic_link
     else
-      signup = Signup.new(email_address: email_address)
-      if signup.valid?(:identity_creation)
-        magic_link = signup.create_identity if Account.accepting_signups?
+      @signup = Signup.new(email_address: email_address)
+      if @signup.valid?(:identity_creation)
+        magic_link = @signup.create_identity if Account.accepting_signups?
         redirect_to_session_magic_link magic_link
       else
-        head :unprocessable_entity
+        render :new, status: :unprocessable_entity
       end
     end
   end

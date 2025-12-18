@@ -36,7 +36,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       assert_difference -> { MagicLink.count }, +1 do
         assert_difference -> { Identity.count }, +1 do
           post session_path,
-            params: { email_address: "nonexistent-#{SecureRandom.hex(6)}@example.com" }
+            params: { email_address: "nonexistent-#{SecureRandom.hex(6)}@unlimited.studio" }
         end
       end
 
@@ -51,7 +51,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_no_difference -> { MagicLink.count } do
           assert_no_difference -> { Identity.count } do
             post session_path,
-              params: { email_address: "nonexistent-#{SecureRandom.hex(6)}@example.com" }
+              params: { email_address: "nonexistent-#{SecureRandom.hex(6)}@unlimited.studio" }
           end
         end
 
@@ -68,6 +68,18 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       untenanted do
         assert_no_difference -> { Identity.count } do
           post session_path, params: { email_address: "not-a-valid-email" }
+        end
+
+        assert_response :unprocessable_entity
+      end
+    end
+  end
+
+  test "create with email from non-allowed domain" do
+    without_action_dispatch_exception_handling do
+      untenanted do
+        assert_no_difference -> { Identity.count } do
+          post session_path, params: { email_address: "newuser@example.com" }
         end
 
         assert_response :unprocessable_entity
