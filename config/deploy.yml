@@ -2,22 +2,21 @@
 service: fizzy
 image: fizzy
 
-
 #-- About your deployment --#
 
 # Where to deploy fizzy
 servers:
   web:
-    - fizzy.example.com  # Set your server name here
+    - fizzy.unlimited.studio # Set your server name here
 
 # How you connect to your server
 ssh:
-  user: root  # If you use a different username to SSH to your server, specify it here
+  user: forge # If you use a different username to SSH to your server, specify it here
 
 # Automatic SSL
 proxy:
-  ssl: true                # Set this to false if you *don't* want SSL
-  host: fizzy.example.com  # Set your server name here to use automatic SSL
+  ssl: true # Set this to false if you *don't* want SSL
+  host: fizzy.unlimited.studio # Set your server name here to use automatic SSL
 
 # Your application configuration (secrets come from .kamal/secrets).
 env:
@@ -27,12 +26,11 @@ env:
     - VAPID_PRIVATE_KEY
     - SMTP_USERNAME
     - SMTP_PASSWORD
+    - MAILER_FROM_ADDRESS
+    - SMTP_ADDRESS
   clear:
-    MAILER_FROM_ADDRESS: support@example.com # The email "from" address that Fizzy sends email from
-    SMTP_ADDRESS: mail.example.com # The SMTP server you'll use to send email
     MULTI_TENANT: false # Set to true to allow multiple accounts to sign up
     SOLID_QUEUE_IN_PUMA: true # Run background jobs in the app container
-
 
 #-- General configuration --#
 
@@ -40,7 +38,7 @@ env:
 registry:
   server: localhost:5555
 
-# Handy aliases for interacting with your deployment. For eaxmple: `bin/kamal console` will connect to a
+# Handy aliases for interacting with your deployment. For example: `bin/kamal console` will connect to a
 # Rails console in production.
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
@@ -60,4 +58,4 @@ asset_path: /rails/public/assets
 
 # Configure the image builder.
 builder:
-  arch: amd64
+  arch: arm64
