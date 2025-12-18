@@ -21,7 +21,7 @@ class SignupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create" do
-    email_address = "newuser-#{SecureRandom.hex(6)}@example.com"
+    email_address = "newuser-#{SecureRandom.hex(6)}@unlimited.studio"
 
     untenanted do
       assert_difference -> { Identity.count }, +1 do
@@ -40,6 +40,20 @@ class SignupsControllerTest < ActionDispatch::IntegrationTest
         assert_no_difference -> { Identity.count } do
           assert_no_difference -> { MagicLink.count } do
             post signup_path, params: { signup: { email_address: "not-a-valid-email" } }
+          end
+        end
+
+        assert_response :unprocessable_entity
+      end
+    end
+  end
+
+  test "create with email from non-unlimited.studio domain" do
+    without_action_dispatch_exception_handling do
+      untenanted do
+        assert_no_difference -> { Identity.count } do
+          assert_no_difference -> { MagicLink.count } do
+            post signup_path, params: { signup: { email_address: "user@example.com" } }
           end
         end
 

@@ -31,7 +31,7 @@ class JoinCodesControllerTest < ActionDispatch::IntegrationTest
   test "create" do
     assert_difference -> { Identity.count }, 1 do
       assert_difference -> { User.count }, 1 do
-        post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "new_user@example.com" }
+        post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "new_user@unlimited.studio" }
       end
     end
 
@@ -75,7 +75,7 @@ class JoinCodesControllerTest < ActionDispatch::IntegrationTest
 
     assert_difference -> { Identity.count }, 1 do
       assert_difference -> { User.count }, 1 do
-        post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "new_user@example.com" }
+        post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "new_user@unlimited.studio" }
       end
     end
 
@@ -89,6 +89,17 @@ class JoinCodesControllerTest < ActionDispatch::IntegrationTest
       assert_no_difference -> { Identity.count } do
         assert_no_difference -> { User.count } do
           post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "not-a-valid-email" }
+        end
+      end
+      assert_response :unprocessable_entity
+    end
+  end
+
+  test "create with email from non-allowed domain" do
+    without_action_dispatch_exception_handling do
+      assert_no_difference -> { Identity.count } do
+        assert_no_difference -> { User.count } do
+          post join_path(code: @join_code.code, script_name: @account.slug), params: { email_address: "new_user@example.com" }
         end
       end
       assert_response :unprocessable_entity

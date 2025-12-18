@@ -33,12 +33,17 @@ class JoinCodesController < ApplicationController
       @identity = Identity.find_or_initialize_by(email_address: params.expect(:email_address))
 
       if @identity.new_record?
-        if @identity.invalid?
+        if @identity.invalid? || !valid_email_domain?
           head :unprocessable_entity
         else
           @identity.save!
         end
       end
+    end
+
+    def valid_email_domain?
+      domain = @identity.email_address&.split("@")&.last&.downcase
+      domain == "unlimited.studio"
     end
 
     def set_join_code

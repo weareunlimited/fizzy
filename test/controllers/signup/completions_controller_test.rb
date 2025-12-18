@@ -2,7 +2,7 @@ require "test_helper"
 
 class Signup::CompletionsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @signup = Signup.new(email_address: "newuser@example.com", full_name: "New User")
+    @signup = Signup.new(email_address: "newuser@unlimited.studio", full_name: "New User")
 
     @signup.create_identity || raise("Failed to create identity")
 

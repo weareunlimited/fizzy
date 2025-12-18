@@ -12,11 +12,11 @@ class SignupsController < ApplicationController
   end
 
   def create
-    signup = Signup.new(signup_params)
-    if signup.valid?(:identity_creation)
-      redirect_to_session_magic_link signup.create_identity
+    @signup = Signup.new(signup_params)
+    if @signup.valid?(:identity_creation)
+      redirect_to_session_magic_link @signup.create_identity
     else
-      head :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 

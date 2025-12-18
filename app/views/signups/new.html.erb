@@ -10,7 +10,15 @@
       </label>
     </div>
 
-    <p>Enter your email to create an account.</p>
+    <% if @signup.errors.any? %>
+      <div class="txt-negative txt-small">
+        <% @signup.errors.full_messages.each do |message| %>
+          <p class="margin-block-none"><%= message %></p>
+        <% end %>
+      </div>
+    <% else %>
+      <p>Enter your email to create an account.</p>
+    <% end %>
 
     <button type="submit" id="log_in" class="btn btn--link center txt-medium">
       <span>Let’s go</span>

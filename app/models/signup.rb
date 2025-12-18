@@ -7,6 +7,7 @@ class Signup
   attr_reader :account, :user
 
   validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }, on: :identity_creation
+  validate :email_domain_must_be_unlimited_studio, on: :identity_creation
   validates :full_name, :identity, presence: true, on: :completion
   validates :full_name, length: { maximum: 240 }
 
@@ -44,6 +45,15 @@ class Signup
   end
 
   private
+    def email_domain_must_be_unlimited_studio
+      return if email_address.blank?
+
+      domain = email_address.split("@").last&.downcase
+      if domain.blank? || domain != "unlimited.studio"
+        errors.add(:email_address, "must be from allowed domain")
+      end
+    end
+
     # Override to customize the handling of external accounts associated to the account.
     def create_tenant
       nil
